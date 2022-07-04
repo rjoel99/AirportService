@@ -1,6 +1,8 @@
 package mx.com.ids.practice.service.impl;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -26,6 +28,20 @@ public class AirportServiceImpl implements AirportService {
 		this.airportRepository = airportRepository;
 	}
 
+	@Override
+	public void add(Airport airport) {
+		
+		airportRepository.save(airport);
+	}
+	
+	@Override
+	public List<Airport> fromIdsToEntities(List<Integer> airportIds) {
+		
+		return airportIds.stream()
+				.map(id -> findById(id))
+				.collect(Collectors.toList());
+	}
+	
 	@Override
 	public Collection<Airport> findAll() {
 

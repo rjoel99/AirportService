@@ -1,14 +1,18 @@
 package mx.com.ids.practice.service.impl;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import mx.com.ids.practice.entity.Airport;
 import mx.com.ids.practice.entity.Country;
+import mx.com.ids.practice.model.CountryRequest;
 import mx.com.ids.practice.repository.CountryRepository;
+import mx.com.ids.practice.service.AirportService;
 import mx.com.ids.practice.service.CountryService;
 
 /**
@@ -21,9 +25,21 @@ import mx.com.ids.practice.service.CountryService;
 public class CountryServiceImpl implements CountryService {
 
 	private CountryRepository countryRepository;
+	private AirportService airportService;
 	
-	public CountryServiceImpl(CountryRepository countryRepository) {
+	public CountryServiceImpl(CountryRepository countryRepository, AirportService airportService) {
 		this.countryRepository = countryRepository;
+		this.airportService = airportService;
+	}
+
+	@Override
+	public void add(CountryRequest countryRequest) {
+		
+		List<Airport> airports = airportService.fromIdsToEntities(countryRequest.getAirportIds());
+		
+		Country country = new Country(countryRequest.getCode(), countryRequest.getName(), airports);
+		
+		countryRepository.save(country);
 	}
 
 	@Override
@@ -64,14 +80,15 @@ public class CountryServiceImpl implements CountryService {
 	}
 
 	@Override
-	public void update(long id, Country country) {
+	public void update(long id, CountryRequest countryRequest) {
 		
 		Country countrySaved = findById(id);
 		
 		log.info("Updating country with id {}...", id);
 		
-		countrySaved.setName(country.getName());
-		countrySaved.setCode(country.getCode());
+		countrySaved.setName(countryRequest.getName());
+		countrySaved.setCode(countryRequest.getCode());
+		countrySaved.setAirports(airportService.fromIdsToEntities(countryRequest.getAirportIds()));
 		
 		countryRepository.save(countrySaved);
 		

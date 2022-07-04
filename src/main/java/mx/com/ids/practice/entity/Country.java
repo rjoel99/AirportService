@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 
@@ -18,6 +19,7 @@ import lombok.Data;
  *
  */
 @Data
+@NoArgsConstructor
 @Entity
 public class Country {
 
@@ -34,4 +36,10 @@ public class Country {
 	@JoinColumn(name = "airport_id")
 	@OneToMany
 	private List<Airport> airports;
+	
+	public Country(String code, String name, List<Airport> airports) {
+		this.code     = code;
+		this.name     = name;
+		this.airports = airports;
+	}
 }

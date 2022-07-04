@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 
@@ -14,6 +15,7 @@ import lombok.Data;
  *
  */
 @Data
+@NoArgsConstructor
 @Entity
 public class Language {
 
@@ -26,4 +28,10 @@ public class Language {
 	
 	@Column(nullable = false)
 	private String name;
+	
+	public Language(String code, String name) {
+		
+		this.code = code;
+		this.name = name;
+	}
 }

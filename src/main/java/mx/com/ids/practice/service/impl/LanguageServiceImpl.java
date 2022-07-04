@@ -1,6 +1,8 @@
 package mx.com.ids.practice.service.impl;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -24,6 +26,20 @@ public class LanguageServiceImpl implements LanguageService {
 	
 	public LanguageServiceImpl(LanguageRepository languageRepository) {
 		this.languageRepository = languageRepository;
+	}
+	
+	@Override
+	public void add(Language language) {
+		
+		languageRepository.save(language);
+	}
+	
+	@Override
+	public List<Language> fromIdsToEntities(List<Integer> languageIds) {
+		
+		return languageIds.stream()
+			.map(id -> findById(id))
+			.collect(Collectors.toList());
 	}
 
 	@Override

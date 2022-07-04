@@ -4,17 +4,20 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.com.ids.practice.entity.Country;
+import mx.com.ids.practice.model.CountryRequest;
 import mx.com.ids.practice.service.CountryService;
 
 /**
@@ -30,6 +33,19 @@ public class CountryController {
 
 	public CountryController(CountryService countryService) {
 		this.countryService = countryService;
+	}
+	
+	@PostMapping
+	public ResponseEntity<Object> add(@RequestBody CountryRequest countryRequest) {
+		
+		countryService.add(countryRequest);
+		
+		Map<String, String> response = new HashMap<>();
+		
+		response.put("message", "Country created");
+		
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(response);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,13 +66,13 @@ public class CountryController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Object> updateById(@PathVariable long id, @RequestBody Country country) {
+	public ResponseEntity<Object> updateById(@PathVariable long id, @RequestBody CountryRequest countryRequest) {
 		
-		countryService.update(id, country);
+		countryService.update(id, countryRequest);
 		
 		Map<String, String> response = new HashMap<>();
 		
-		response.put("message", "Country update");
+		response.put("message", "Country updated");
 		
 		return ResponseEntity.ok(response);
 	}
@@ -68,7 +84,7 @@ public class CountryController {
 		
 		Map<String, String> response = new HashMap<>();
 		
-		response.put("message", "Country update");
+		response.put("message", "Country deleted");
 		
 		return ResponseEntity.ok(response);
 	}

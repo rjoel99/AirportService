@@ -1,15 +1,21 @@
 package mx.com.ids.practice.service.impl;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import mx.com.ids.practice.entity.Country;
 import mx.com.ids.practice.entity.Employee;
+import mx.com.ids.practice.entity.Language;
+import mx.com.ids.practice.model.EmployeeRequest;
 import mx.com.ids.practice.repository.EmployeeRepository;
+import mx.com.ids.practice.service.CountryService;
 import mx.com.ids.practice.service.EmployeeService;
+import mx.com.ids.practice.service.LanguageService;
 
 /**
  * 
@@ -21,10 +27,29 @@ import mx.com.ids.practice.service.EmployeeService;
 public class EmployeeServiceImpl implements EmployeeService {
 
 	private EmployeeRepository employeeRepository;
+	private CountryService countryService;
+	private LanguageService languageService;
 	
-	public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+	public EmployeeServiceImpl(EmployeeRepository employeeRepository, CountryService countryService,
+			LanguageService languageService) {
 		this.employeeRepository = employeeRepository;
+		this.countryService = countryService;
+		this.languageService = languageService;
 	}
+
+
+	@Override
+	public void add(EmployeeRequest employeeRequest) {
+		
+		Country country = countryService.findById(employeeRequest.getCountryId());
+		
+		List<Language> languages = languageService.fromIdsToEntities(employeeRequest.getLanguageIds());
+		
+		Employee employee = new Employee(employeeRequest.getFirstname(), employeeRequest.getSurname(), country, languages);
+		
+		employeeRepository.save(employee);
+	}
+	
 
 	@Override
 	public Collection<Employee> findAll() {
@@ -64,14 +89,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public void update(long id, Employee employee) {
+	public void update(long id, EmployeeRequest employeeRequest) {
 		
 		Employee employeeSaved = findById(id);
 		
 		log.info("Updating employee with id {}...", id);
 		
-		employeeSaved.setFirstname(employee.getFirstname());
-		employeeSaved.setSurname(employee.getSurname());
+		employeeSaved.setFirstname(employeeRequest.getFirstname());
+		employeeSaved.setSurname(employeeRequest.getSurname());
+		employeeSaved.setCountry(countryService.findById(id));
+		employeeSaved.setLanguages(languageService.fromIdsToEntities(employeeRequest.getLanguageIds()));
 		
 		employeeRepository.save(employeeSaved);
 		

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
 import mx.com.ids.practice.error.ErrorMessage;
@@ -27,7 +28,7 @@ public class ControllerException {
 		ErrorMessage message = ErrorMessage.builder()
 				.status(HttpStatus.NOT_FOUND.value())
 				.message(exception.getMessage())
-				.path(request.getContextPath())
+				.path(((ServletWebRequest) request).getRequest().getRequestURI())
 				.datetime(LocalDateTime.now())
 				.build();
 		
