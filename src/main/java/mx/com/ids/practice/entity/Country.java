@@ -33,7 +33,7 @@ public class Country {
 	@Column(nullable = false)
 	private String name;
 	
-	@JoinColumn(name = "airport_id")
+	@JoinColumn(name = "country_id")
 	@OneToMany
 	private List<Airport> airports;
 	

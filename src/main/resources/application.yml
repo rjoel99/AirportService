@@ -16,6 +16,11 @@ spring:
         format-sql: true
     hibernate:
       ddl-auto: create
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  sql:
+    init:
+      mode: always
   h2:
     console:
       enabled: true
