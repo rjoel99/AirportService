@@ -36,10 +36,12 @@ public class CountryServiceImpl implements CountryService {
 
 	@Override
 	public void add(CountryRequest countryRequest) {
-		
+	
 		List<Airport> airports = airportService.fromIdsToEntities(countryRequest.getAirportIds());
 		
 		Country country = new Country(countryRequest.getCode(), countryRequest.getName(), airports);
+		
+		airports.forEach(a -> a.setCountry(country));
 		
 		countryRepository.save(country);
 	}
@@ -88,9 +90,15 @@ public class CountryServiceImpl implements CountryService {
 		
 		log.info("Updating country with id {}...", id);
 		
+		List<Airport> airports = airportService.fromIdsToEntities(countryRequest.getAirportIds());
+		
 		countrySaved.setName(countryRequest.getName());
 		countrySaved.setCode(countryRequest.getCode());
-		countrySaved.setAirports(airportService.fromIdsToEntities(countryRequest.getAirportIds()));
+		
+		countrySaved.getAirports().clear();
+		countrySaved.setAirports(airports);
+		
+		airports.forEach(a -> a.setCountry(countrySaved));
 		
 		countryRepository.save(countrySaved);
 		

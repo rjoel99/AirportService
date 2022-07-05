@@ -2,6 +2,7 @@ package mx.com.ids.practice.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,6 +31,6 @@ public class Airport {
 	
 	@JsonBackReference
 	@JoinColumn(name = "country_id")
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Country country;
 }

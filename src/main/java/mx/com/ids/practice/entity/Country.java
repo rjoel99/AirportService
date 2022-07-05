@@ -36,7 +36,7 @@ public class Country {
 	private String name;
 	
 	@JsonManagedReference
-	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "country", orphanRemoval = true)
+	@OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
 	private List<Airport> airports;
 	
 	public Country(String code, String name, List<Airport> airports) {
