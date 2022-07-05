@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.com.ids.practice.entity.Language;
+import mx.com.ids.practice.model.LanguageRequest;
 import mx.com.ids.practice.service.LanguageService;
 
 /**
@@ -51,9 +52,9 @@ public class LanguageController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> add(@RequestBody Language language) {
+	public ResponseEntity<Object> add(@RequestBody LanguageRequest languageRequest) {
 		
-		languageService.add(language);
+		languageService.add(languageRequest);
 		
 		Map<String, String> response = new HashMap<>();
 		
@@ -64,9 +65,9 @@ public class LanguageController {
 	}
 	
 	@PutMapping(path = "/{id}")
-	public ResponseEntity<Object> updateById(@PathVariable long id, @RequestBody Language language) {
+	public ResponseEntity<Object> updateById(@PathVariable long id, @RequestBody LanguageRequest languageRequest) {
 		
-		languageService.update(id, language);
+		languageService.update(id, languageRequest);
 		
 		Map<String, String> response = new HashMap<>();
 		

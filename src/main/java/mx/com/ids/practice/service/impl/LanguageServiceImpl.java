@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 import mx.com.ids.practice.entity.Language;
+import mx.com.ids.practice.model.LanguageRequest;
 import mx.com.ids.practice.repository.LanguageRepository;
 import mx.com.ids.practice.service.LanguageService;
 
@@ -29,7 +30,9 @@ public class LanguageServiceImpl implements LanguageService {
 	}
 	
 	@Override
-	public void add(Language language) {
+	public void add(LanguageRequest languageRequest) {
+		
+		Language language = new Language(languageRequest.getName(), languageRequest.getName());
 		
 		languageRepository.save(language);
 	}
@@ -80,14 +83,14 @@ public class LanguageServiceImpl implements LanguageService {
 	}
 
 	@Override
-	public void update(long id, Language language) {
+	public void update(long id, LanguageRequest languageRequest) {
 		
 		Language languageSaved = findById(id);
 		
 		log.info("Updating language with id {}...", id);
 		
-		languageSaved.setName(language.getName());
-		languageSaved.setCode(language.getCode());
+		languageSaved.setName(languageRequest.getName());
+		languageSaved.setCode(languageRequest.getCode());
 		
 		languageRepository.save(languageSaved);
 		
