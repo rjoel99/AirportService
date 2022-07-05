@@ -36,7 +36,6 @@ public class Language {
 	@Column(nullable = false)
 	private String name;
 	
-	@JsonIgnore
 	@JsonBackReference
 	@ManyToMany(mappedBy = "languages")
 	private List<Employee> employees;
