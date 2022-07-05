@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +34,7 @@ public class LanguageController {
 	}
 	
 	
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping
 	public ResponseEntity<Collection<Language>> getAll() {
 		
 		Collection<Language> languages = languageService.findAll();
@@ -43,8 +42,7 @@ public class LanguageController {
 		return ResponseEntity.ok(languages);
 	}
 	
-	@GetMapping(path     = "/{id}",
-			    produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping("/{id}")
 	public ResponseEntity<Language> getById(@PathVariable long id) {
 		
 		Language language = languageService.findById(id);
@@ -65,7 +63,7 @@ public class LanguageController {
 				.body(response);
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping(path = "/{id}")
 	public ResponseEntity<Object> updateById(@PathVariable long id, @RequestBody Language language) {
 		
 		languageService.update(id, language);

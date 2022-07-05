@@ -11,6 +11,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.PreRemove;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,7 @@ public class Language {
 	@Column(nullable = false)
 	private String name;
 	
+	@JsonIgnore
 	@JsonBackReference
 	@ManyToMany(mappedBy = "languages")
 	private List<Employee> employees;
