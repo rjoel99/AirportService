@@ -12,6 +12,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -39,6 +41,7 @@ public class Employee {
 	@OneToOne
 	private Country country;
 	
+	@JsonManagedReference
 	@JoinTable(name               = "employee_language", 
 			   joinColumns        = @JoinColumn(name = "employee_id"),
 			   inverseJoinColumns = @JoinColumn(name = "language_id")
@@ -52,5 +55,11 @@ public class Employee {
 		this.surname = surname;
 		this.country = country;
 		this.languages = languages;
+	}
+	
+	public void removeLanguage(Language language) {
+		
+		languages.remove(language);
+		language.getEmployees().remove(this);
 	}
 }

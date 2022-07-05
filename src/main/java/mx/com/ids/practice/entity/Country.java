@@ -2,13 +2,15 @@ package mx.com.ids.practice.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,8 +35,8 @@ public class Country {
 	@Column(nullable = false)
 	private String name;
 	
-	@JoinColumn(name = "country_id")
-	@OneToMany
+	@JsonManagedReference
+	@OneToMany(cascade = CascadeType.REMOVE, mappedBy = "country", orphanRemoval = true)
 	private List<Airport> airports;
 	
 	public Country(String code, String name, List<Airport> airports) {

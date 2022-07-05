@@ -5,6 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
 
@@ -23,4 +27,9 @@ public class Airport {
 	
 	@Column(nullable = false)
 	private String name;
+	
+	@JsonBackReference
+	@JoinColumn(name = "country_id")
+	@ManyToOne
+	private Country country;
 }
