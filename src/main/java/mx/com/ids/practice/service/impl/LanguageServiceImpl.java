@@ -32,7 +32,7 @@ public class LanguageServiceImpl implements LanguageService {
 	@Override
 	public void add(LanguageRequest languageRequest) {
 		
-		Language language = new Language(languageRequest.getName(), languageRequest.getName());
+		Language language = new Language(languageRequest.getCode(), languageRequest.getName());
 		
 		languageRepository.save(language);
 	}
