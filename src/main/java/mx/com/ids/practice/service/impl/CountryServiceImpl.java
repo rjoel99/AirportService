@@ -94,11 +94,10 @@ public class CountryServiceImpl implements CountryService {
 		
 		countrySaved.setName(countryRequest.getName());
 		countrySaved.setCode(countryRequest.getCode());
-		
-		countrySaved.getAirports().clear();
-		countrySaved.setAirports(airports);
-		
+				
 		airports.forEach(a -> a.setCountry(countrySaved));
+		countrySaved.getAirports().forEach(a -> a.setCountry(null));
+		countrySaved.setAirports(airports);		
 		
 		countryRepository.save(countrySaved);
 		
