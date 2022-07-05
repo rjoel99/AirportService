@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import mx.com.ids.practice.entity.Country;
@@ -24,6 +25,7 @@ import mx.com.ids.practice.service.LanguageService;
  */
 @Slf4j
 @Service
+@Transactional
 public class EmployeeServiceImpl implements EmployeeService {
 
 	private EmployeeRepository employeeRepository;
