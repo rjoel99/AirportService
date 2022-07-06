@@ -1,10 +1,12 @@
 # AirportService
 
-Servicio que realiza operaciones CRUD sobre entidades como:
+Aplicación que actúa como servicio web que realiza operaciones CRUD sobre entidades como:
 - Lenguaje.
 - Empleado.
 - País.
 - Aeropuerto.
+
+Además, la aplicación cuenta con pruebas unitarias.
 
 ## Ejecución
 
