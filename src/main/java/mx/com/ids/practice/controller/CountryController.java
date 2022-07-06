@@ -26,26 +26,13 @@ import mx.com.ids.practice.service.CountryService;
  *
  */
 @RestController
-@RequestMapping("/countries")
+@RequestMapping("/api/v1/countries")
 public class CountryController {
 
 	private CountryService countryService;
 
 	public CountryController(CountryService countryService) {
 		this.countryService = countryService;
-	}
-	
-	@PostMapping
-	public ResponseEntity<Object> add(@RequestBody CountryRequest countryRequest) {
-		
-		countryService.add(countryRequest);
-		
-		Map<String, String> response = new HashMap<>();
-		
-		response.put("message", "Country created");
-		
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(response);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +52,21 @@ public class CountryController {
 		return ResponseEntity.ok(country);
 	}
 	
-	@PutMapping("/{id}")
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> add(@RequestBody CountryRequest countryRequest) {
+		
+		countryService.add(countryRequest);
+		
+		Map<String, String> response = new HashMap<>();
+		
+		response.put("message", "Country created");
+		
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(response);
+	}
+	
+	@PutMapping(path     = "/{id}",
+				consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> updateById(@PathVariable long id, @RequestBody CountryRequest countryRequest) {
 		
 		countryService.update(id, countryRequest);

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ import mx.com.ids.practice.service.LanguageService;
  *
  */
 @RestController
-@RequestMapping("/languages")
+@RequestMapping("/api/v1/languages")
 public class LanguageController {
 
 	private LanguageService languageService;
@@ -35,7 +36,7 @@ public class LanguageController {
 	}
 	
 	
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Language>> getAll() {
 		
 		Collection<Language> languages = languageService.findAll();
@@ -43,7 +44,8 @@ public class LanguageController {
 		return ResponseEntity.ok(languages);
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping(path     = "/{id}",
+			    produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Language> getById(@PathVariable long id) {
 		
 		Language language = languageService.findById(id);
@@ -51,7 +53,7 @@ public class LanguageController {
 		return ResponseEntity.ok(language);
 	}
 	
-	@PostMapping
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> add(@RequestBody LanguageRequest languageRequest) {
 		
 		languageService.add(languageRequest);
@@ -64,7 +66,8 @@ public class LanguageController {
 				.body(response);
 	}
 	
-	@PutMapping(path = "/{id}")
+	@PutMapping(path     = "/{id}",
+			    consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> updateById(@PathVariable long id, @RequestBody LanguageRequest languageRequest) {
 		
 		languageService.update(id, languageRequest);

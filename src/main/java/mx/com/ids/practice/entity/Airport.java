@@ -11,7 +11,9 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 
@@ -19,6 +21,8 @@ import lombok.Data;
  *
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Airport {
 
@@ -30,7 +34,11 @@ public class Airport {
 	private String name;
 	
 	@JsonBackReference
-	@JoinColumn(name = "country_id")
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "country_id")
 	private Country country;
+	
+	public Airport(String name) {
+		this.name = name;
+	}
 }

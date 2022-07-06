@@ -31,7 +31,11 @@ public class AirportServiceImpl implements AirportService {
 	@Override
 	public void add(Airport airport) {
 		
+		log.info("Adding new airport -> {}...", airport.getName());
+		
 		airportRepository.save(airport);
+		
+		log.info("Aiport {} added", airport.getName());
 	}
 	
 	@Override

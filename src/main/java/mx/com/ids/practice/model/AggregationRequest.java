@@ -1,7 +1,5 @@
 package mx.com.ids.practice.model;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +12,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CountryRequest {
+public class AggregationRequest {
 
-	private String code;
-	private String name;
-	private List<Integer> airportIds;
+	private String firstname;
+	private String surname;
+	private String country;
+	private String language;
+	private String airport;
 }

@@ -45,6 +45,11 @@ public class Language {
 		this.name = name;
 	}
 	
+	public Language(long id, String code, String name) {
+		this(code, name);
+		this.id = id;
+	}
+	
 	@PreRemove
 	public void removeEmployee() {
 	

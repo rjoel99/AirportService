@@ -9,7 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
@@ -27,13 +29,17 @@ public class Country {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
 	@Column(nullable = false)
 	private String code;
 	
 	@Column(nullable = false)
 	private String name;
+	
+	@JsonIgnore
+	@OneToOne(mappedBy = "country")
+	private Employee employee;
 	
 	@JsonManagedReference
 	@OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
@@ -43,5 +49,10 @@ public class Country {
 		this.code     = code;
 		this.name     = name;
 		this.airports = airports;
+	}
+	
+	public Country(Long id, String code, String name, List<Airport> airports) {
+		this(code, name, airports);
+		this.id = id;
 	}
 }

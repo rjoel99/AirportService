@@ -26,26 +26,13 @@ import mx.com.ids.practice.service.EmployeeService;
  *
  */
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/api/v1/employees")
 public class EmployeeController {
 
 	private EmployeeService employeeService;
 
 	public EmployeeController(EmployeeService employeeService) {
 		this.employeeService = employeeService;
-	}
-	
-	@PostMapping
-	public ResponseEntity<Object> add(@RequestBody EmployeeRequest employeeRequest) {
-		
-		employeeService.add(employeeRequest);
-		
-		Map<String, String> response = new HashMap<>();
-		
-		response.put("message", "Employee created");
-		
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(response);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +52,21 @@ public class EmployeeController {
 		return ResponseEntity.ok(employee);
 	}
 	
-	@PutMapping("/{id}")
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> add(@RequestBody EmployeeRequest employeeRequest) {
+		
+		employeeService.add(employeeRequest);
+		
+		Map<String, String> response = new HashMap<>();
+		
+		response.put("message", "Employee created");
+		
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(response);
+	}
+	
+	@PutMapping(path     = "/{id}",
+				consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> updateById(@PathVariable long id, @RequestBody EmployeeRequest employeeRequest) {
 		
 		employeeService.update(id, employeeRequest);

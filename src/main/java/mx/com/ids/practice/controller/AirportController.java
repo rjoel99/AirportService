@@ -25,26 +25,13 @@ import mx.com.ids.practice.service.AirportService;
  *
  */
 @RestController
-@RequestMapping("/airports")
+@RequestMapping("/api/v1/airports")
 public class AirportController {
 
 	private AirportService airportService;
 
 	public AirportController(AirportService airportService) {
 		this.airportService = airportService;
-	}
-	
-	@PostMapping
-	public ResponseEntity<Object> add(@RequestBody Airport airport) {
-		
-		airportService.add(airport);
-		
-		Map<String, String> response = new HashMap<>();
-		
-		response.put("message", "Airport created");
-		
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(response);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,7 +51,21 @@ public class AirportController {
 		return ResponseEntity.ok(airport);
 	}
 	
-	@PutMapping("/{id}")
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Object> add(@RequestBody Airport airport) {
+		
+		airportService.add(airport);
+		
+		Map<String, String> response = new HashMap<>();
+		
+		response.put("message", "Airport created");
+		
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(response);
+	}
+	
+	@PutMapping(path     = "/{id}", 
+				consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> updateById(@PathVariable long id, @RequestBody Airport airport) {
 		
 		airportService.update(id, airport);

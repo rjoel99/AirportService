@@ -29,7 +29,7 @@ public class Employee {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	
 	@Column(nullable = false)
 	private String firstname;
@@ -37,16 +37,16 @@ public class Employee {
 	@Column(nullable = false)
 	private String surname;
 	
-	@JoinColumn(name = "country_id")
 	@OneToOne
+	@JoinColumn(name = "country_id")
 	private Country country;
 	
 	@JsonManagedReference
+	@ManyToMany
 	@JoinTable(name               = "employee_language", 
 			   joinColumns        = @JoinColumn(name = "employee_id"),
 			   inverseJoinColumns = @JoinColumn(name = "language_id")
-			  )
-	@ManyToMany
+			   )
 	private List<Language> languages;
 	
 	public Employee(String firstname, String surname, Country country, List<Language> languages) {
@@ -55,6 +55,12 @@ public class Employee {
 		this.surname = surname;
 		this.country = country;
 		this.languages = languages;
+	}
+	
+	
+	public Employee(Long id, String firstname, String surname, Country country, List<Language> languages) {
+		this(firstname, surname, country, languages);
+		this.id = id;
 	}
 	
 	public void removeLanguage(Language language) {

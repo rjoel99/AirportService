@@ -43,6 +43,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public void add(EmployeeRequest employeeRequest) {
 		
+		log.info("Adding new employee {}...", employeeRequest.getFirstname());
+		
 		Country country = countryService.findById(employeeRequest.getCountryId());
 		
 		List<Language> languages = languageService.fromIdsToEntities(employeeRequest.getLanguageIds());
@@ -50,6 +52,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Employee employee = new Employee(employeeRequest.getFirstname(), employeeRequest.getSurname(), country, languages);
 		
 		employeeRepository.save(employee);
+		
+		log.info("Employee {} added", employeeRequest.getFirstname());
 	}
 	
 
@@ -99,7 +103,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		
 		employeeSaved.setFirstname(employeeRequest.getFirstname());
 		employeeSaved.setSurname(employeeRequest.getSurname());
-		employeeSaved.setCountry(countryService.findById(id));
+		employeeSaved.setCountry(countryService.findById(employeeRequest.getCountryId()));
 		employeeSaved.setLanguages(languageService.fromIdsToEntities(employeeRequest.getLanguageIds()));
 		
 		employeeRepository.save(employeeSaved);

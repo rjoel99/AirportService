@@ -37,6 +37,8 @@ public class CountryServiceImpl implements CountryService {
 	@Override
 	public void add(CountryRequest countryRequest) {
 	
+		log.info("Adding new country -> {}...", countryRequest.getName());
+		
 		List<Airport> airports = airportService.fromIdsToEntities(countryRequest.getAirportIds());
 		
 		Country country = new Country(countryRequest.getCode(), countryRequest.getName(), airports);
@@ -44,6 +46,8 @@ public class CountryServiceImpl implements CountryService {
 		airports.forEach(a -> a.setCountry(country));
 		
 		countryRepository.save(country);
+		
+		log.info("Country {} added", countryRequest.getName());
 	}
 
 	@Override
@@ -63,7 +67,7 @@ public class CountryServiceImpl implements CountryService {
 
 		log.info("Getting country by id {}...", id);
 		
-		Country country = countryRepository.findById(id)
+		Country country = countryRepository.findById(Long.valueOf(id))
 				.orElseThrow(() -> new EntityNotFoundException("The country doesn't exist"));
 		
 		log.info("Country with id {} obtained", id);
@@ -77,6 +81,9 @@ public class CountryServiceImpl implements CountryService {
 		Country country = findById(id);
 		
 		log.info("Deleting country with id {}...", id);
+		
+		if (country.getEmployee() != null)
+				country.getEmployee().setCountry(null);
 		
 		countryRepository.delete(country);
 		
