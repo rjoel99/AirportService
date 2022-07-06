@@ -20,7 +20,7 @@ mvn spring-boot:run
 docker build -t airport-service .
 ```
 
-3. Descargar la imagen Docker desde el repositorio DockerHub y ejecutarla:
+3. También se puede descargar la imagen Docker desde el repositorio DockerHub y ejecutarla:
 ```bash
 docker pull rjoel99/airport-service
 ```
