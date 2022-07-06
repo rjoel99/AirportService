@@ -15,9 +15,12 @@ Además, la aplicación cuenta con pruebas unitarias.
 mvn spring-boot:run
 ```
 
-2. La aplicación puede ser descargada desde este repositorio y después crear la imagen Docker con el archivo Dockerfile.
+2. La aplicación puede ser descargada desde este repositorio, crear la imagen Docker con el archivo Dockerfile, y después ejecutar el contenedor.
 ```bash
 docker build -t airport-service .
+```
+```bash
+docker run --rm -d -p 8080:8080 airport-service
 ```
 
 3. También se puede descargar la imagen Docker desde el repositorio DockerHub y ejecutarla:
