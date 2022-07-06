@@ -10,11 +10,12 @@ Además, la aplicación cuenta con pruebas unitarias.
 
 ## Ejecución
 
-1. La aplicación puede ser descargada este repositorio y ejecutarla en un IDE como:
-- STS.
-- Intellij IDEA.
+1. La aplicación puede ser descargada desde este repositorio y ser ejecutada en con el siguiente comando:
+```bash
+mvn spring-boot:run
+```
 
-2. La aplicación puede ser descargada este repositorio y después crear la imagen Docker con el archivo Dockerfile.
+2. La aplicación puede ser descargada desde este repositorio y después crear la imagen Docker con el archivo Dockerfile.
 ```bash
 docker build -t airport-service .
 ```
