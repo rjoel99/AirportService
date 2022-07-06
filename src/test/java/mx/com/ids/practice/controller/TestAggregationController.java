@@ -26,7 +26,7 @@ import mx.com.ids.practice.service.AggregationService;
  *
  */
 @WebMvcTest(controllers = AggregationController.class)
-public class TestClientController {
+public class TestAggregationController {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -34,11 +34,11 @@ public class TestClientController {
 	@MockBean
 	private AggregationService aggregationService;
 	
-	private static String uri;
+	private static String url;
 	
 	@BeforeAll
 	public static void setUp() {
-		uri = "http://localhost:8080/apiv1/clientes/add";
+		url = "http://localhost:8080/apiv1/empleados/add";
 	}
 	
 	@DisplayName("Add new record of language, employee, country, and airport")
@@ -52,7 +52,7 @@ public class TestClientController {
 		Mockito.doNothing().when(aggregationService).add(aggregationRequest);
 	
 		//execute
-		mockMvc.perform(post(uri)
+		mockMvc.perform(post(url)
 							.content(new ObjectMapper().writeValueAsString(aggregationRequest))
 							.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isCreated())

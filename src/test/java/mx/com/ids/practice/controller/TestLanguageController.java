@@ -41,11 +41,11 @@ public class TestLanguageController {
 	@MockBean
 	private LanguageService languageService;
 	
-	private static String uri;
+	private static String url;
 	
 	@BeforeAll
 	public static void setUp() {
-		uri = "http://localhost:8080/api/v1/languages";
+		url = "http://localhost:8080/api/v1/languages";
 	}
 	
 	@DisplayName("Get all languages")
@@ -62,7 +62,7 @@ public class TestLanguageController {
 		Mockito.when(languageService.findAll()).thenReturn(languages);
 		
 		//execute
-		mockMvc.perform(get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk());
 	}
 	
@@ -80,7 +80,7 @@ public class TestLanguageController {
 		Mockito.when(languageService.findById(id)).thenReturn(language);
 		
 		//execute
-		mockMvc.perform(get(uri + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(get(url + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.id", is(id), Long.class))
 			.andExpect(jsonPath("$.code", is(code)))
@@ -98,7 +98,7 @@ public class TestLanguageController {
 		Mockito.doNothing().when(languageService).add(languageRequest);
 	
 		//execute
-		mockMvc.perform(post(uri)
+		mockMvc.perform(post(url)
 							.content(new ObjectMapper().writeValueAsString(languageRequest))
 							.contentType(MediaType.APPLICATION_JSON_VALUE)
 							.accept(MediaType.APPLICATION_JSON_VALUE))
@@ -117,7 +117,7 @@ public class TestLanguageController {
 		Mockito.doNothing().when(languageService).update(id, employeeRequest);
 		
 		//execute
-		mockMvc.perform(put(uri + "/{id}", id)
+		mockMvc.perform(put(url + "/{id}", id)
 							.content(new ObjectMapper().writeValueAsString(employeeRequest))
 							.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
@@ -135,7 +135,7 @@ public class TestLanguageController {
 		Mockito.doNothing().when(languageService).delete(id);
 		
 		//execute
-		mockMvc.perform(delete(uri + "/{id}", id))
+		mockMvc.perform(delete(url + "/{id}", id))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message", is("Language deleted")));
 	}

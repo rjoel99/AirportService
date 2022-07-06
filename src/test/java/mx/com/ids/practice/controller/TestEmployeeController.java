@@ -42,11 +42,11 @@ public class TestEmployeeController {
 	@MockBean
 	private EmployeeService employeeService;
 	
-	private static String uri;
+	private static String url;
 	
 	@BeforeAll
 	public static void setUp() {
-		uri = "http://localhost:8080/api/v1/employees";
+		url = "http://localhost:8080/api/v1/employees";
 	}
 	
 	@DisplayName("Get all employees")
@@ -63,7 +63,7 @@ public class TestEmployeeController {
 		Mockito.when(employeeService.findAll()).thenReturn(employees);
 		
 		//execute
-		mockMvc.perform(get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk());
 	}
 	
@@ -82,7 +82,7 @@ public class TestEmployeeController {
 		Mockito.when(employeeService.findById(id)).thenReturn(employee);
 		
 		//execute
-		mockMvc.perform(get(uri + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(get(url + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.id", is(id), Long.class))
 			.andExpect(jsonPath("$.firstname", is(firstname)))
@@ -103,7 +103,7 @@ public class TestEmployeeController {
 		Mockito.doNothing().when(employeeService).add(employeeRequest);
 	
 		//execute
-		mockMvc.perform(post(uri)
+		mockMvc.perform(post(url)
 							.content(new ObjectMapper().writeValueAsString(employeeRequest))
 							.contentType(MediaType.APPLICATION_JSON_VALUE)
 							.accept(MediaType.APPLICATION_JSON_VALUE))
@@ -122,7 +122,7 @@ public class TestEmployeeController {
 		Mockito.doNothing().when(employeeService).update(id, employeeRequest);
 		
 		//execute
-		mockMvc.perform(put(uri + "/{id}", id)
+		mockMvc.perform(put(url + "/{id}", id)
 							.content(new ObjectMapper().writeValueAsString(employeeRequest))
 							.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
@@ -140,7 +140,7 @@ public class TestEmployeeController {
 		Mockito.doNothing().when(employeeService).delete(id);
 		
 		//execute
-		mockMvc.perform(delete(uri + "/{id}", id))
+		mockMvc.perform(delete(url + "/{id}", id))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message", is("Employee deleted")));
 	}

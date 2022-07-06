@@ -41,11 +41,11 @@ public class TestCountryController {
 	@MockBean
 	private CountryService countryService;
 	
-	private static String uri;
+	private static String url;
 	
 	@BeforeAll
 	public static void setUp() {
-		uri = "http://localhost:8080/api/v1/countries";
+		url = "http://localhost:8080/api/v1/countries";
 	}
 	
 	@DisplayName("Get all countries")
@@ -62,7 +62,7 @@ public class TestCountryController {
 		Mockito.when(countryService.findAll()).thenReturn(countries);
 		
 		//execute
-		mockMvc.perform(get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk());
 	}
 	
@@ -80,7 +80,7 @@ public class TestCountryController {
 		Mockito.when(countryService.findById(id)).thenReturn(country);
 		
 		//execute
-		mockMvc.perform(get(uri + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(get(url + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.id", is(id), Long.class))
 			.andExpect(jsonPath("$.name", is(name)));
@@ -97,7 +97,7 @@ public class TestCountryController {
 		Mockito.doNothing().when(countryService).add(countryRequest);
 	
 		//execute
-		mockMvc.perform(post(uri)
+		mockMvc.perform(post(url)
 							.content(new ObjectMapper().writeValueAsString(countryRequest))
 							.contentType(MediaType.APPLICATION_JSON_VALUE)
 							.accept(MediaType.APPLICATION_JSON_VALUE))
@@ -118,7 +118,7 @@ public class TestCountryController {
 		Mockito.doNothing().when(countryService).update(id, countryRequest);
 		
 		//execute
-		mockMvc.perform(put(uri + "/{id}", id)
+		mockMvc.perform(put(url + "/{id}", id)
 							.content(new ObjectMapper().writeValueAsString(countryRequest))
 							.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
@@ -136,7 +136,7 @@ public class TestCountryController {
 		Mockito.doNothing().when(countryService).delete(id);
 		
 		//execute
-		mockMvc.perform(delete(uri + "/{id}", id))
+		mockMvc.perform(delete(url + "/{id}", id))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message", is("Country deleted")));
 	}

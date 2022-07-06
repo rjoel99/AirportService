@@ -20,7 +20,7 @@ import mx.com.ids.practice.service.AggregationService;
  *
  */
 @RestController
-@RequestMapping("/apiv1/clientes/add")
+@RequestMapping("/apiv1/empleados/add")
 public class AggregationController {
 
 	private AggregationService aggregationService;

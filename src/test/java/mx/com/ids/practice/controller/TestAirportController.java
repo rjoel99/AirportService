@@ -40,11 +40,11 @@ public class TestAirportController {
 	@MockBean
 	private AirportService airportService;
 	
-	private static String uri;
+	private static String url;
 	
 	@BeforeAll
 	public static void setUp() {
-		uri = "http://localhost:8080/api/v1/airports";
+		url = "http://localhost:8080/api/v1/airports";
 	}
 	
 	@DisplayName("Get all airports")
@@ -60,7 +60,7 @@ public class TestAirportController {
 		Mockito.when(airportService.findAll()).thenReturn(airports);
 		
 		//execute
-		mockMvc.perform(get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk());
 	}
 	
@@ -77,7 +77,7 @@ public class TestAirportController {
 		Mockito.when(airportService.findById(id)).thenReturn(airport);
 		
 		//execute
-		mockMvc.perform(get(uri + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
+		mockMvc.perform(get(url + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.id", is(id), Long.class))
 			.andExpect(jsonPath("$.name", is(name)));
@@ -94,7 +94,7 @@ public class TestAirportController {
 		Mockito.doNothing().when(airportService).add(airport);
 	
 		//execute
-		mockMvc.perform(post(uri)
+		mockMvc.perform(post(url)
 							.content(new ObjectMapper().writeValueAsString(airport))
 							.contentType(MediaType.APPLICATION_JSON_VALUE)
 							.accept(MediaType.APPLICATION_JSON_VALUE))
@@ -114,7 +114,7 @@ public class TestAirportController {
 		Mockito.doNothing().when(airportService).update(id, airport);
 		
 		//execute
-		mockMvc.perform(put(uri + "/{id}", id)
+		mockMvc.perform(put(url + "/{id}", id)
 							.content(new ObjectMapper().writeValueAsString(airport))
 							.contentType(MediaType.APPLICATION_JSON_VALUE))
 			.andExpect(status().isOk())
@@ -132,7 +132,7 @@ public class TestAirportController {
 		Mockito.doNothing().when(airportService).delete(id);
 		
 		//execute
-		mockMvc.perform(delete(uri + "/{id}", id))
+		mockMvc.perform(delete(url + "/{id}", id))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message", is("Airport deleted")));
 	}
