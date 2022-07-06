@@ -56,7 +56,7 @@ public class LanguageController {
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> add(@RequestBody LanguageRequest languageRequest) {
 		
-		languageService.add(languageRequest);
+		languageService.addFromRequest(languageRequest);
 		
 		Map<String, String> response = new HashMap<>();
 		

@@ -38,24 +38,6 @@ public class TestLanguageServiceImpl {
 	private LanguageServiceImpl languageService;
 	
 	
-	@DisplayName("Add new language")
-	@Test
-	public void addNewLanguage() {
-		
-		//given
-		LanguageRequest languageRequest = new LanguageRequest("3423324", "Spanish");
-		Language language = new Language(languageRequest.getCode(), languageRequest.getName());
-		
-		//when
-		Mockito.when(languageRepository.save(language)).thenReturn(language);
-		
-		//execute
-		languageService.add(languageRequest);
-		
-		//then
-		Mockito.verify(languageRepository, Mockito.times(1)).save(language);
-	}
-	
 	@DisplayName("Find all languages")
 	@Test
 	public void findAllLanguages() {
@@ -79,8 +61,8 @@ public class TestLanguageServiceImpl {
 	public void findLanguageById() {
 		
 		//given
-		long id = 2134234;
-		Optional<Language> expectedLanguage = Optional.of(new Language("23423423", "Spanish"));
+		long id = 1;
+		Optional<Language> expectedLanguage = Optional.of(new Language(id, "23423423", "Spanish"));
 		Language actualLanguage;
 		
 		//when
@@ -91,6 +73,26 @@ public class TestLanguageServiceImpl {
 		
 		//then
 		assertEquals(expectedLanguage.get(), actualLanguage);
+	}
+	
+	@DisplayName("Find language by name")
+	@Test
+	public void findLanguageByName() {
+		
+		//given
+		long id     = 1;
+		String name = "Spanish";
+		Optional<Language> expectedLanguage = Optional.of(new Language(id, "23423423", name));
+		Optional<Language> actualLanguage;
+		
+		//when
+		Mockito.when(languageRepository.findByName(name)).thenReturn(expectedLanguage);
+		
+		//execute
+		actualLanguage = languageService.findByName(name);
+		
+		//then
+		assertEquals(expectedLanguage, actualLanguage);
 	}
 	
 	@DisplayName("Throw exception when the language id doesn't exist")
@@ -107,25 +109,41 @@ public class TestLanguageServiceImpl {
 		assertThrows(EntityNotFoundException.class, () -> languageService.findById(id));
 	}
 	
-	@DisplayName("Delete a language by id")
+	@DisplayName("Add new language")
 	@Test
-	public void deleteCountryById() {
+	public void addNewLanguage() {
 		
 		//given
-		long id = 132334;
-		Language language = new Language("23423423", "Spanish");
+		Language language = new Language(1L, "324234234", "Spanish");
 		
 		//when
-		Mockito.doReturn(language).when(languageService).findById(id);
-		Mockito.doNothing().when(languageRepository).delete(language);
+		Mockito.when(languageRepository.save(language)).thenReturn(language);
 		
 		//execute
-		languageService.delete(id);
+		languageService.add(language);
 		
 		//then
-		Mockito.verify(languageRepository, Mockito.times(1)).delete(language);
-		
+		Mockito.verify(languageRepository, Mockito.times(1)).save(language);
 	}
+	
+	@DisplayName("Add new language from request")
+	@Test
+	public void addNewLanguageFromRequest() {
+		
+		//given
+		LanguageRequest languageRequest = new LanguageRequest("3423324", "Spanish");
+		Language language = new Language(languageRequest.getCode(), languageRequest.getName());
+		
+		//when
+		Mockito.when(languageRepository.save(language)).thenReturn(language);
+		
+		//execute
+		languageService.addFromRequest(languageRequest);
+		
+		//then
+		Mockito.verify(languageRepository, Mockito.times(1)).save(language);
+	}
+	
 	
 	@DisplayName("Update a language by id")
 	@Test
@@ -145,5 +163,24 @@ public class TestLanguageServiceImpl {
 		
 		//then
 		Mockito.verify(languageRepository, Mockito.times(1)).save(language);
+	}
+	
+	@DisplayName("Delete a language by id")
+	@Test
+	public void deleteCountryById() {
+		
+		//given
+		long id = 1;
+		Language language = new Language(id, "23423423", "Spanish");
+		
+		//when
+		Mockito.doReturn(language).when(languageService).findById(id);
+		Mockito.doNothing().when(languageRepository).delete(language);
+		
+		//execute
+		languageService.delete(id);
+		
+		//then
+		Mockito.verify(languageRepository, Mockito.times(1)).delete(language);		
 	}
 }

@@ -55,7 +55,7 @@ public class CountryController {
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> add(@RequestBody CountryRequest countryRequest) {
 		
-		countryService.add(countryRequest);
+		countryService.addFromRequest(countryRequest);
 		
 		Map<String, String> response = new HashMap<>();
 		

@@ -2,6 +2,7 @@ package mx.com.ids.practice.service.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -34,8 +35,23 @@ public class CountryServiceImpl implements CountryService {
 		this.airportService = airportService;
 	}
 
+	
 	@Override
-	public void add(CountryRequest countryRequest) {
+	public Country add(Country country) {
+		
+		log.info("Adding new country -> {}...", country.getName());
+		
+		country.getAirports().forEach(a -> a.setCountry(country));
+		
+		Country countrySaved = countryRepository.save(country);
+		
+		log.info("Country {} added", country.getName());
+		
+		return countrySaved;
+	}
+	
+	@Override
+	public void addFromRequest(CountryRequest countryRequest) {
 	
 		log.info("Adding new country -> {}...", countryRequest.getName());
 		
@@ -71,6 +87,18 @@ public class CountryServiceImpl implements CountryService {
 				.orElseThrow(() -> new EntityNotFoundException("The country doesn't exist"));
 		
 		log.info("Country with id {} obtained", id);
+		
+		return country;
+	}
+	
+	@Override
+	public Optional<Country> findByName(String name) {
+		
+		log.info("Getting country by name {}...", name);
+		
+		Optional<Country> country = countryRepository.findByName(name);
+		
+		log.info("Country with name {} obtained", name);
 		
 		return country;
 	}

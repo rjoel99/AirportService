@@ -43,27 +43,6 @@ public class TestCountryServiceImpl {
 	private CountryServiceImpl countryService;
 	
 	
-	@DisplayName("Add new country")
-	@Test
-	public void addNewCountry() {
-		
-		//given
-		CountryRequest countryRequest = new CountryRequest("2342323", "Mexico", List.of(1, 2, 3));
-		
-		List<Airport> airports = List.of(new Airport(234234, "Cancun International Airport", null));
-		Country country = new Country(countryRequest.getCode(), countryRequest.getName(), airports);
-		
-		//when
-		Mockito.doReturn(airports).when(airportService).fromIdsToEntities(countryRequest.getAirportIds());
-		Mockito.when(countryRepository.save(country)).thenReturn(country);
-		
-		//execute
-		countryService.add(countryRequest);
-		
-		//then
-		Mockito.verify(countryRepository, Mockito.times(1)).save(country);
-	}
-	
 	@DisplayName("Find all countries")
 	@Test
 	public void findAllCountries() {
@@ -87,8 +66,8 @@ public class TestCountryServiceImpl {
 	public void findCountryById() {
 		
 		//given
-		long id = 2134234;
-		Optional<Country> expectedCountry = Optional.of(new Country("23423423", "Mexico", null));
+		long id = 1;
+		Optional<Country> expectedCountry = Optional.of(new Country(id, "23423423", "Mexico", null));
 		Country actualCountry;
 		
 		//when
@@ -99,6 +78,26 @@ public class TestCountryServiceImpl {
 		
 		//then
 		assertEquals(expectedCountry.get(), actualCountry);
+	}
+	
+	@DisplayName("Find country by name")
+	@Test
+	public void findCountryByName() {
+		
+		//given
+		long id     = 1;
+		String name = "Mexico";
+		Optional<Country> expectedCountry = Optional.of(new Country(id, "23423423", name, null));
+		Optional<Country> actualCountry;
+		
+		//when
+		Mockito.when(countryRepository.findByName(name)).thenReturn(expectedCountry);
+		
+		//execute
+		actualCountry = countryService.findByName(name);
+		
+		//then
+		assertEquals(expectedCountry, actualCountry);
 	}
 	
 	@DisplayName("Throw exception when the country id doesn't exist")
@@ -115,35 +114,55 @@ public class TestCountryServiceImpl {
 		assertThrows(EntityNotFoundException.class, () -> countryService.findById(id));
 	}
 	
-	@DisplayName("Delete a country by id")
+	@DisplayName("Add new country")
 	@Test
-	public void deleteCountryById() {
+	public void addNewCountry() {
 		
 		//given
-		long id = 132334;
-		Country country = new Country("23423423", "Mexico", null);
+		List<Airport> airports = List.of(new Airport(234234, "Cancun International Airport", null));
+		Country country = new Country(1L, "45r234234", "Mexico", airports);		
 		
 		//when
-		Mockito.doReturn(country).when(countryService).findById(id);
-		Mockito.doNothing().when(countryRepository).delete(country);
+		Mockito.when(countryRepository.save(country)).thenReturn(country);
 		
 		//execute
-		countryService.delete(id);
+		countryService.add(country);
 		
 		//then
-		Mockito.verify(countryRepository, Mockito.times(1)).delete(country);
-		
+		Mockito.verify(countryRepository, Mockito.times(1)).save(country);
 	}
+	
+	@DisplayName("Add new country from request")
+	@Test
+	public void addNewCountryFromRequest() {
+		
+		//given
+		CountryRequest countryRequest = new CountryRequest("2342323", "Mexico", List.of(1, 2, 3));
+		
+		List<Airport> airports = List.of(new Airport(234234, "Cancun International Airport", null));
+		Country country = new Country(countryRequest.getCode(), countryRequest.getName(), airports);
+		
+		//when
+		Mockito.doReturn(airports).when(airportService).fromIdsToEntities(countryRequest.getAirportIds());
+		Mockito.when(countryRepository.save(country)).thenReturn(country);
+		
+		//execute
+		countryService.addFromRequest(countryRequest);
+		
+		//then
+		Mockito.verify(countryRepository, Mockito.times(1)).save(country);
+	}
+
 	
 	@DisplayName("Update a country by id")
 	@Test
 	public void updateCountryById() {
 		
 		//given
-		long id = 12323;
+		long id = 1;
 		List<Airport> airports        = List.of(new Airport(232323, "Cancun International Airport", null));
 		CountryRequest countryRequest = new CountryRequest("23423423", "Mexico", List.of(1, 2, 3));
-		Country expectedCountry       = new Country("23423423", "Mexico", airports);
+		Country expectedCountry       = new Country(id, "23423423", "Mexico", airports);
 		
 		//when
 		Mockito.when(airportService.fromIdsToEntities(countryRequest.getAirportIds())).thenReturn(airports);
@@ -155,5 +174,25 @@ public class TestCountryServiceImpl {
 		
 		//then
 		Mockito.verify(countryRepository, Mockito.times(1)).save(expectedCountry);
+	}
+	
+	@DisplayName("Delete a country by id")
+	@Test
+	public void deleteCountryById() {
+		
+		//given
+		long id = 1;
+		Country country = new Country(id, "23423423", "Mexico", null);
+		
+		//when
+		Mockito.doReturn(country).when(countryService).findById(id);
+		Mockito.doNothing().when(countryRepository).delete(country);
+		
+		//execute
+		countryService.delete(id);
+		
+		//then
+		Mockito.verify(countryRepository, Mockito.times(1)).delete(country);
+		
 	}
 }

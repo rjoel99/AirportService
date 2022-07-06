@@ -13,11 +13,11 @@ import mx.com.ids.practice.entity.Country;
 import mx.com.ids.practice.entity.Employee;
 import mx.com.ids.practice.entity.Language;
 import mx.com.ids.practice.model.AggregationRequest;
-import mx.com.ids.practice.repository.AirportRepository;
-import mx.com.ids.practice.repository.CountryRepository;
-import mx.com.ids.practice.repository.EmployeeRepository;
-import mx.com.ids.practice.repository.LanguageRepository;
 import mx.com.ids.practice.service.AggregationService;
+import mx.com.ids.practice.service.AirportService;
+import mx.com.ids.practice.service.CountryService;
+import mx.com.ids.practice.service.EmployeeService;
+import mx.com.ids.practice.service.LanguageService;
 
 /**
  * 
@@ -29,23 +29,24 @@ import mx.com.ids.practice.service.AggregationService;
 @Transactional
 public class AggregationServiceImpl implements AggregationService {
 
-	private LanguageRepository languageRepository;
-	private EmployeeRepository employeeRepository;
-	private CountryRepository countryRepository;
-	private AirportRepository airportRepository;
+	private LanguageService languageService;
+	private EmployeeService employeeService;
+	private CountryService countryService;
+	private AirportService airportService;
 	
-	public AggregationServiceImpl(LanguageRepository languageRepository, EmployeeRepository employeeRepository,
-			CountryRepository countryRepository, AirportRepository airportRepository) {
-		this.languageRepository = languageRepository;
-		this.employeeRepository = employeeRepository;
-		this.countryRepository = countryRepository;
-		this.airportRepository = airportRepository;
+	public AggregationServiceImpl(LanguageService languageService, EmployeeService employeeService,
+			CountryService countryService, AirportService airportService) {
+		super();
+		this.languageService = languageService;
+		this.employeeService = employeeService;
+		this.countryService  = countryService;
+		this.airportService  = airportService;
 	}
 
 	@Override
 	public void add(AggregationRequest clientRequest) {
 	
-		log.info("Adding new client...");
+		log.info("Adding new record...");
 		
 		Language language = addLanguage(clientRequest);
 			
@@ -55,42 +56,42 @@ public class AggregationServiceImpl implements AggregationService {
 		
 		addEmployee(clientRequest, country, List.of(language));
 		
-		log.info("Client added");
+		log.info("Record added");
 	}
 	
 	public Language addLanguage(AggregationRequest aggregationRequest) {
 		
-		Optional<Language> languageOp = languageRepository.findByName(aggregationRequest.getLanguage());
+		Optional<Language> languageOp = languageService.findByName(aggregationRequest.getLanguage());
 		
 		return languageOp.isPresent() ? languageOp.get()
-									  : languageRepository.save(new Language(UUID.randomUUID().toString(), aggregationRequest.getLanguage()));
+									  : languageService.add(new Language(UUID.randomUUID().toString(), aggregationRequest.getLanguage()));
 	}
 	
 	
 	public Airport addAirport(AggregationRequest aggregationRequest) {
 		
-		Optional<Airport> airportOp = airportRepository.findByName(aggregationRequest.getAirport());
+		Optional<Airport> airportOp = airportService.findByName(aggregationRequest.getAirport());
 		
 		return airportOp.isPresent() ? airportOp.get()
-									 : airportRepository.save(new Airport(aggregationRequest.getAirport()));
+									 : airportService.add(new Airport(aggregationRequest.getAirport()));
 	}
 	
 	public Country addCountry(AggregationRequest aggregationRequest, List<Airport> airports) {
 		
-		Optional<Country> countryOp = countryRepository.findByName(aggregationRequest.getCountry());
+		Optional<Country> countryOp = countryService.findByName(aggregationRequest.getCountry());
 		
 		return countryOp.isPresent() ? countryOp.get()
-									 : countryRepository.save(new Country(UUID.randomUUID().toString(), aggregationRequest.getCountry(), airports));
+									 : countryService.add(new Country(UUID.randomUUID().toString(), aggregationRequest.getCountry(), airports));
 	}
 	
 	public Employee addEmployee(AggregationRequest aggregationRequest, Country country, List<Language> languages) {
 		
-		Optional<Employee> employeeOp = employeeRepository.findByFirstnameAndSurname(aggregationRequest.getFirstname(), aggregationRequest.getSurname());
+		Optional<Employee> employeeOp = employeeService.findByFirstnameAndSurname(aggregationRequest.getFirstname(), aggregationRequest.getSurname());
 		
 		return employeeOp.isPresent() ? employeeOp.get()
-									  : employeeRepository.save(new Employee(aggregationRequest.getFirstname(), 
-											  								 aggregationRequest.getSurname(),
-																			 country,
-																			 languages));
+									  : employeeService.add(new Employee(aggregationRequest.getFirstname(), 
+											  							 aggregationRequest.getSurname(),
+																		 country,
+																		 languages));
 	}
 }

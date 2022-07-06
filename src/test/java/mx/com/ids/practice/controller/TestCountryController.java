@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +50,7 @@ public class TestCountryController {
 		url = "http://localhost:8080/api/v1/countries";
 	}
 	
-	@DisplayName("Get all countries")
+	@DisplayName("Get all countries with status 200")
 	@Test
 	public void getAllCountries() throws Exception {
 		
@@ -66,7 +68,7 @@ public class TestCountryController {
 			.andExpect(status().isOk());
 	}
 	
-	@DisplayName("Get country by id")
+	@DisplayName("Get country by id with status 200")
 	@Test
 	public void getCountryById() throws Exception {
 		
@@ -86,7 +88,26 @@ public class TestCountryController {
 			.andExpect(jsonPath("$.name", is(name)));
 	}
 	
-	@DisplayName("Add new country")
+	@DisplayName("Get status 404 if country id doesn't exist")
+	@Test
+	public void throwExceptionIfIdDoesntExist() throws Exception {
+		
+		//given
+		long id = 1;
+		String message = "The country doesn't exist";
+		
+		//when
+		Mockito.when(countryService.findById(id)).thenThrow(new EntityNotFoundException(message));
+		
+		//execute
+		mockMvc.perform(get(url + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.status", is(404)))
+			.andExpect(jsonPath("$.message", is(message)))
+			.andExpect(jsonPath("$.path", is("/api/v1/countries/" + id)));
+	}
+	
+	@DisplayName("Add new country with status 201")
 	@Test
 	public void addNewCountry() throws Exception {
 		
@@ -94,7 +115,7 @@ public class TestCountryController {
 		CountryRequest countryRequest = new CountryRequest("345dsdfq453", "Mexico", List.of(1, 2, 3));
 		
 		//when
-		Mockito.doNothing().when(countryService).add(countryRequest);
+		Mockito.doNothing().when(countryService).addFromRequest(countryRequest);
 	
 		//execute
 		mockMvc.perform(post(url)
@@ -104,7 +125,7 @@ public class TestCountryController {
 			.andExpect(status().isCreated());
 	}
 	
-	@DisplayName("Update a country by id")
+	@DisplayName("Update a country by id with status 200")
 	@Test
 	public void updateCountryById() throws Exception {
 		
@@ -125,7 +146,7 @@ public class TestCountryController {
 			.andExpect(jsonPath("$.message", is("Country updated")));
 	}
 	
-	@DisplayName("Delete a country by id")
+	@DisplayName("Delete a country by id with status 200")
 	@Test
 	public void deleteContryById() throws Exception {
 		

@@ -2,6 +2,7 @@ package mx.com.ids.practice.service.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -39,9 +40,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 		this.languageService = languageService;
 	}
 
+	@Override
+	public Employee add(Employee employee) {
+		
+		log.info("Adding new employee {}...", employee.getFirstname());
+		
+		Employee employeeSaved = employeeRepository.save(employee);
+		
+		log.info("Employee {} added", employee.getFirstname());
+		
+		return employeeSaved;
+	}
 
 	@Override
-	public void add(EmployeeRequest employeeRequest) {
+	public void addFromRequest(EmployeeRequest employeeRequest) {
 		
 		log.info("Adding new employee {}...", employeeRequest.getFirstname());
 		
@@ -78,6 +90,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 				.orElseThrow(() -> new EntityNotFoundException("The employee doesn't exist"));
 		
 		log.info("Employee with id {} obtained", id);
+		
+		return employee;
+	}
+	
+	@Override
+	public Optional<Employee> findByFirstnameAndSurname(String firstname, String surname) {
+		
+		log.info("Getting employee by name {}...", firstname);
+		
+		Optional<Employee> employee = employeeRepository.findByFirstnameAndSurname(firstname, surname);
+		
+		log.info("Employee with name {} obtained", firstname);
 		
 		return employee;
 	}

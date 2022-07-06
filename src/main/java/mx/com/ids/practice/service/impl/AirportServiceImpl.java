@@ -2,6 +2,7 @@ package mx.com.ids.practice.service.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
@@ -27,15 +28,18 @@ public class AirportServiceImpl implements AirportService {
 	public AirportServiceImpl(AirportRepository airportRepository) {
 		this.airportRepository = airportRepository;
 	}
+	
 
 	@Override
-	public void add(Airport airport) {
+	public Airport add(Airport airport) {
 		
 		log.info("Adding new airport -> {}...", airport.getName());
 		
-		airportRepository.save(airport);
+		Airport airportSaved = airportRepository.save(airport);
 		
 		log.info("Aiport {} added", airport.getName());
+		
+		return airportSaved;
 	}
 	
 	@Override
@@ -67,6 +71,18 @@ public class AirportServiceImpl implements AirportService {
 				.orElseThrow(() -> new EntityNotFoundException("The airport doesn't exist"));
 		
 		log.info("Airport with id {} obtained", id);
+		
+		return airport;
+	}
+	
+	@Override
+	public Optional<Airport> findByName(String name) {
+		
+		log.info("Getting airport by name {}...", name);
+		
+		Optional<Airport> airport = airportRepository.findByName(name);
+		
+		log.info("Airport with name {} obtained", name);
 		
 		return airport;
 	}

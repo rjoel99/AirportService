@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,7 +51,7 @@ public class TestEmployeeController {
 		url = "http://localhost:8080/api/v1/employees";
 	}
 	
-	@DisplayName("Get all employees")
+	@DisplayName("Get all employees with status 200")
 	@Test
 	public void getAllEmployees() throws Exception {
 		
@@ -67,7 +69,7 @@ public class TestEmployeeController {
 			.andExpect(status().isOk());
 	}
 	
-	@DisplayName("Get employee by id")
+	@DisplayName("Get employee by id with status 200")
 	@Test
 	public void getEmployeeById() throws Exception {
 		
@@ -92,7 +94,26 @@ public class TestEmployeeController {
 			.andExpect(jsonPath("$.country.name", is(employee.getCountry().getName())));
 	}
 	
-	@DisplayName("Add new employee")
+	@DisplayName("Get status 404 if employee id doesn't exist")
+	@Test
+	public void throwExceptionIfIdDoesntExist() throws Exception {
+		
+		//given
+		long id = 1;
+		String message = "The employee doesn't exist";
+		
+		//when
+		Mockito.when(employeeService.findById(id)).thenThrow(new EntityNotFoundException(message));
+		
+		//execute
+		mockMvc.perform(get(url + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.status", is(404)))
+			.andExpect(jsonPath("$.message", is(message)))
+			.andExpect(jsonPath("$.path", is("/api/v1/employees/" + id)));
+	}
+	
+	@DisplayName("Add new employee with status 201")
 	@Test
 	public void addNewEmployee() throws Exception {
 		
@@ -100,7 +121,7 @@ public class TestEmployeeController {
 		EmployeeRequest employeeRequest = new EmployeeRequest("John", "Doe", 2, List.of(1, 2, 3));
 		
 		//when
-		Mockito.doNothing().when(employeeService).add(employeeRequest);
+		Mockito.doNothing().when(employeeService).addFromRequest(employeeRequest);
 	
 		//execute
 		mockMvc.perform(post(url)
@@ -110,7 +131,7 @@ public class TestEmployeeController {
 			.andExpect(status().isCreated());
 	}
 	
-	@DisplayName("Update an employee by id")
+	@DisplayName("Update an employee by id with status 200")
 	@Test
 	public void updateEmployeeById() throws Exception {
 		
@@ -129,7 +150,7 @@ public class TestEmployeeController {
 			.andExpect(jsonPath("$.message", is("Employee updated")));
 	}
 	
-	@DisplayName("Delete an employee by id")
+	@DisplayName("Delete an employee by id with status 200")
 	@Test
 	public void deleteEmployeeById() throws Exception {
 		

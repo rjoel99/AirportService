@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +50,7 @@ public class TestLanguageController {
 		url = "http://localhost:8080/api/v1/languages";
 	}
 	
-	@DisplayName("Get all languages")
+	@DisplayName("Get all languages with status 200")
 	@Test
 	public void getAllLanguages() throws Exception {
 		
@@ -66,7 +68,7 @@ public class TestLanguageController {
 			.andExpect(status().isOk());
 	}
 	
-	@DisplayName("Get employee by id")
+	@DisplayName("Get employee by id with status 200")
 	@Test
 	public void getLanguageById() throws Exception {
 		
@@ -87,7 +89,27 @@ public class TestLanguageController {
 			.andExpect(jsonPath("$.name", is(name)));
 	}
 	
-	@DisplayName("Add new language")
+	@DisplayName("Get status 404 if employee id doesn't exist")
+	@Test
+	public void throwExceptionIfIdDoesntExist() throws Exception {
+		
+		//given
+		long id = 1;
+		String message = "The language doesn't exist";
+		
+		//when
+		Mockito.when(languageService.findById(id)).thenThrow(new EntityNotFoundException(message));
+		
+		//execute
+		mockMvc.perform(get(url + "/{id}", id).accept(MediaType.APPLICATION_JSON_VALUE))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.status", is(404)))
+			.andExpect(jsonPath("$.message", is(message)))
+			.andExpect(jsonPath("$.path", is("/api/v1/languages/" + id)));
+	}
+	
+	
+	@DisplayName("Add new language with status 201")
 	@Test
 	public void addNewLanguage() throws Exception {
 		
@@ -95,7 +117,7 @@ public class TestLanguageController {
 		LanguageRequest languageRequest = new LanguageRequest("234sdf234", "Spanish");
 		
 		//when
-		Mockito.doNothing().when(languageService).add(languageRequest);
+		Mockito.doNothing().when(languageService).addFromRequest(languageRequest);
 	
 		//execute
 		mockMvc.perform(post(url)
@@ -105,7 +127,7 @@ public class TestLanguageController {
 			.andExpect(status().isCreated());
 	}
 	
-	@DisplayName("Update an language by id")
+	@DisplayName("Update an language by id with status 200")
 	@Test
 	public void updateLanguageById() throws Exception {
 		
@@ -124,7 +146,7 @@ public class TestLanguageController {
 			.andExpect(jsonPath("$.message", is("Language updated")));
 	}
 	
-	@DisplayName("Delete an language by id")
+	@DisplayName("Delete an language by id with status 200")
 	@Test
 	public void deleteLanguageById() throws Exception {
 		

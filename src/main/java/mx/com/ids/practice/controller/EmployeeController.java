@@ -55,7 +55,7 @@ public class EmployeeController {
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> add(@RequestBody EmployeeRequest employeeRequest) {
 		
-		employeeService.add(employeeRequest);
+		employeeService.addFromRequest(employeeRequest);
 		
 		Map<String, String> response = new HashMap<>();
 		

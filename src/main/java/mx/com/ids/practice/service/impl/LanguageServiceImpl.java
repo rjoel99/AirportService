@@ -2,6 +2,7 @@ package mx.com.ids.practice.service.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
@@ -30,7 +31,19 @@ public class LanguageServiceImpl implements LanguageService {
 	}
 	
 	@Override
-	public void add(LanguageRequest languageRequest) {
+	public Language add(Language language) {
+		
+		log.info("Adding new language -> {}...", language.getName());
+		
+		Language languageSaved = languageRepository.save(language);
+		
+		log.info("Language {} added", language.getName());
+		
+		return languageSaved;
+	}
+	
+	@Override
+	public void addFromRequest(LanguageRequest languageRequest) {
 		
 		log.info("Adding new language -> {}...", languageRequest.getName());
 		
@@ -74,6 +87,18 @@ public class LanguageServiceImpl implements LanguageService {
 		return language;
 	}
 
+	@Override
+	public Optional<Language> findByName(String name) {
+		
+		log.info("Getting language by name {}...", name);
+		
+		Optional<Language> language = languageRepository.findByName(name);
+		
+		log.info("Language with name {} obtained", name);
+		
+		return language;
+	}
+	
 	@Override
 	public void delete(long id) {
 

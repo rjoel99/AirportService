@@ -37,29 +37,12 @@ public class TestAirportServiceImpl {
 	private AirportServiceImpl airportService;
 	
 	
-	@DisplayName("Add new airport")
-	@Test
-	public void addNewAirport() {
-		
-		//given
-		Airport airport = new Airport(1223, "Cancun International Airport", null);
-		
-		//when
-		Mockito.when(airportRepository.save(airport)).thenReturn(airport);
-		
-		//execute
-		airportService.add(airport);
-		
-		//then
-		Mockito.verify(airportRepository, Mockito.times(1)).save(airport);
-	}
-	
 	@DisplayName("Find all airports")
 	@Test
 	public void findAllAirports() {
 		
 		//given
-		List<Airport> expectedAirports = List.of(new Airport(1, "Spain", null));
+		List<Airport> expectedAirports = List.of(new Airport(1, "Cancun International Airport", null));
 		Collection<Airport> actualAirports;
 		
 		//when
@@ -77,8 +60,8 @@ public class TestAirportServiceImpl {
 	public void findAirportById() {
 		
 		//given
-		long id = 2134234;
-		Optional<Airport> expectedAirport = Optional.of(new Airport(id, "Mexico", null));
+		long id = 1;
+		Optional<Airport> expectedAirport = Optional.of(new Airport(id, "Cancun International Airport", null));
 		Airport actualAirport;
 		
 		//when
@@ -89,6 +72,26 @@ public class TestAirportServiceImpl {
 		
 		//then
 		assertEquals(expectedAirport.get(), actualAirport);
+	}
+	
+	@DisplayName("Find airport by name")
+	@Test
+	public void findAirportByName() {
+		
+		//given
+		long id     = 1;
+		String name = "Cancun International Airport";
+		Optional<Airport> expectedAirport = Optional.of(new Airport(id, name, null));
+		Optional<Airport> actualAirport;
+		
+		//when
+		Mockito.when(airportRepository.findByName(name)).thenReturn(expectedAirport);
+		
+		//execute
+		actualAirport = airportService.findByName(name);
+		
+		//then
+		assertEquals(expectedAirport, actualAirport);
 	}
 	
 	@DisplayName("Throw exception when the airport id doesn't exist")
@@ -105,13 +108,50 @@ public class TestAirportServiceImpl {
 		assertThrows(EntityNotFoundException.class, () -> airportService.findById(id));
 	}
 	
+	@DisplayName("Add new airport")
+	@Test
+	public void addNewAirport() {
+		
+		//given
+		Airport airport = new Airport(1223, "Cancun International Airport", null);
+		
+		//when
+		Mockito.when(airportRepository.save(airport)).thenReturn(airport);
+		
+		//execute
+		airportService.add(airport);
+		
+		//then
+		Mockito.verify(airportRepository, Mockito.times(1)).save(airport);
+	}
+	
+	@DisplayName("Update an airport by id")
+	@Test
+	public void updateAirportById() {
+		
+		//given
+		long id = 1;
+		Airport aiportRequest = new Airport(id, "Cancun International Airport", null);
+		Airport expectedAirport = new Airport(id, "Cancun International Airport", null);
+		
+		//when
+		Mockito.doReturn(expectedAirport).when(airportService).findById(id);
+		Mockito.when(airportRepository.save(expectedAirport)).thenReturn(expectedAirport);
+		
+		//execute
+		airportService.update(id, aiportRequest);
+		
+		//then
+		Mockito.verify(airportRepository, Mockito.times(1)).save(expectedAirport);
+	}
+	
 	@DisplayName("Delete an airport by id")
 	@Test
 	public void deleteAirportById() {
 		
 		//given
-		long id = 132334;
-		Airport airport = new Airport(id, "Mexico", null);
+		long id = 1;
+		Airport airport = new Airport(id, "Cancun International Airport", null);
 		
 		//when
 		Mockito.doReturn(airport).when(airportService).findById(id);
@@ -123,25 +163,5 @@ public class TestAirportServiceImpl {
 		//then
 		Mockito.verify(airportRepository, Mockito.times(1)).delete(airport);
 		
-	}
-	
-	@DisplayName("Update an airport by id")
-	@Test
-	public void updateAirportById() {
-		
-		//given
-		long id = 12323;
-		Airport aiportRequest = new Airport(id, "Mexico", null);
-		Airport expectedAirport = new Airport(id, "Mexico", null);
-		
-		//when
-		Mockito.doReturn(expectedAirport).when(airportService).findById(id);
-		Mockito.when(airportRepository.save(expectedAirport)).thenReturn(expectedAirport);
-		
-		//execute
-		airportService.update(id, aiportRequest);
-		
-		//then
-		Mockito.verify(airportRepository, Mockito.times(1)).save(expectedAirport);
 	}
 }
